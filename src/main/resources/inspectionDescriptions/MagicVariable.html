@@ -1,0 +1,37 @@
+<html>
+<body>
+Detects and replaces magic variables (hard-coded strings and integers) with local private constants in non-test PHP classes.
+
+<p>
+    This inspection helps improve code readability and maintainability by replacing magic variables with meaningful constants. It also identifies and suggests replacements with existing public constants where applicable.
+</p>
+<p>
+    See https://jetbrains.design/intellij/text/inspections/#descriptions for more information.
+</p>
+<p>
+    Embed code snippets:
+</p>
+<pre><code>
+// Before:
+class Example {
+    public function method() {
+        $value = "magicString";
+    }
+}
+
+// After:
+class Example {
+    private const MAGIC_STRING = "magicString";
+
+    public function method() {
+        $value = self::MAGIC_STRING;
+    }
+}
+</code></pre>
+<!-- tooltip end -->
+<p>Text after this comment will only be shown in the settings of the inspection.</p>
+
+<p>To open related settings directly from the description, add a link with `settings://$` optionally followed by `?$` to
+    pre-select a UI element.</p>
+</body>
+</html>

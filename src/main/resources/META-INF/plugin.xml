@@ -1,18 +1,27 @@
-<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.gamefixxer.phpstormconstantmanagerplugin</id>
-    <name>phpstorm-constant-manager-plugin</name>
+    <name>Phpstorm-Constant-Manager</name>
     <vendor>gamefixxer</vendor>
 
+    <depends>com.jetbrains.php</depends>
     <depends>com.intellij.modules.platform</depends>
+
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.gamefixxer.phpstormconstantmanagerplugin.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <localInspection language="PHP" shortName="MagicVariableInspection" displayName="Magic variable inspection" groupName="PHP" implementationClass="com.github.gamefixxer.phpstormconstantmanagerplugin.MagicVariableInspection" />
     </extensions>
 
     <applicationListeners>
         <listener class="com.github.gamefixxer.phpstormconstantmanagerplugin.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
     </applicationListeners>
+
+    <actions>
+        <action id="ReplaceMagicVariablesAction" class="com.github.gamefixxer.phpstormconstantmanagerplugin.ReplaceMagicVariablesAction"
+                text="Create Constants from Magic Variables"
+                description="Refactors magic strings into private constants.">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
+    </actions>
 </idea-plugin>
