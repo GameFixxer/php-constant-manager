@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.PsiTreeUtil
 import com.jetbrains.php.lang.psi.PhpFile
 import com.jetbrains.php.lang.psi.elements.PhpClass
+import com.jetbrains.php.lang.psi.elements.PhpPsiElement
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 import com.intellij.openapi.project.Project
 import com.jetbrains.php.lang.psi.PhpPsiElementFactory
@@ -46,7 +47,7 @@ class MagicVariableVisitor(private val project: Project) : PsiElementVisitor() {
     }
 
     private fun isTestClass(phpClass: PhpClass): Boolean {
-        val result = phpClass.name?.endsWith("Test") ?: false
+        val result = phpClass.nam.endsWith("Test") ?: false
         log.info("Class ${phpClass.name} isTestClass: $result")
         return result
     }
@@ -54,21 +55,37 @@ class MagicVariableVisitor(private val project: Project) : PsiElementVisitor() {
     private fun processClass(phpClass: PhpClass) {
         log.info("Processing class: ${phpClass.name}")
 
-        // Identify magic variables
+        // Collect and process string literals
         val stringLiterals = PsiTreeUtil.collectElementsOfType(phpClass, StringLiteralExpression::class.java)
             .filter { literal ->
                 !isPartOfConstantOrVariable(literal)
             }
-
-        if (stringLiterals.isEmpty()) {
+        if (stringLiterals.isNotEmpty()) {
+            processStringLiterals(phpClass, stringLiterals)
+        } else {
             log.info("No string literals found in class: ${phpClass.name}")
-            return
         }
 
+        // Collect and process integer literals
+        val integerLiterals = collectIntegerLiterals(phpClass)
+        if (integerLiterals.isNotEmpty()) {
+            processIntegerLiterals(phpClass, integerLiterals)
+        } else {
+            log.info("No integer literals found in class: ${phpClass.name}")
+        }
+    }
+
+    private fun collectIntegerLiterals(phpClass: PhpClass): List<PsiElement> {
+        return PsiTreeUtil.collectElements(phpClass) { it is PhpPsiElement && it.text.matches("^\\d+$".toRegex()) }
+            .filter { literal ->
+                !isPartOfConstantOrVariable(literal)
+            }
+    }
+
+    private fun processStringLiterals(phpClass: PhpClass, stringLiterals: List<StringLiteralExpression>) {
         val constantNames = mutableSetOf<String>()
         val replacements = mutableMapOf<PsiElement, String>()
 
-        // Process string literals
         stringLiterals.forEach { literal ->
             val value = literal.contents
             val constantName = generateConstantName(value)
@@ -112,7 +129,58 @@ class MagicVariableVisitor(private val project: Project) : PsiElementVisitor() {
             }
         }
 
-        log.info("Finished processing class: ${phpClass.name}")
+        log.info("Finished processing string literals in class: ${phpClass.name}")
+    }
+
+    private fun processIntegerLiterals(phpClass: PhpClass, integerLiterals: List<PsiElement>) {
+        val constantNames = mutableSetOf<String>()
+        val replacements = mutableMapOf<PsiElement, String>()
+
+        integerLiterals.forEach { literal ->
+            val value = literal.text.toInt()
+            val contextName = getContextName(literal)
+            val constantName = generateConstantNameForInteger(contextName, value)
+            constantNames.add(constantName)
+            replacements[literal] = constantName
+            log.info("Found integer literal: $value, generated constant name: $constantName")
+        }
+
+        // Find the opening brace {
+        val lBrace = phpClass.node.getChildren(null).find { it.text == "{" }?.psi
+
+        // Generate and insert constants
+        WriteCommandAction.runWriteCommandAction(project) {
+            val anchor = lBrace?.nextSibling
+
+            constantNames.forEach { constantName ->
+                val constantValue = replacements.entries.find { it.value == constantName }?.key?.text ?: ""
+                val constantDeclaration = PhpPsiElementFactory.createClassConstant(
+                    project,
+                    PhpModifier.instance(
+                        PhpModifier.Access.PRIVATE,
+                        PhpModifier.Abstractness.IMPLEMENTED,
+                        PhpModifier.State.DYNAMIC,
+                    ),
+                    constantName,
+                    constantValue
+                )
+                if (anchor != null) {
+                    phpClass.addAfter(constantDeclaration, lBrace)
+                } else {
+                    phpClass.add(constantDeclaration)
+                }
+                log.info("Added constant declaration: private const $constantName = $constantValue; to class ${phpClass.name}")
+            }
+
+            // Replace magic integers with constants
+            replacements.forEach { (element, constantName) ->
+                val constantReference = PhpPsiElementFactory.createClassConstantReferenceUsingSelf(project, constantName)
+                element.replace(constantReference)
+                log.info("Replaced magic integer $element with constant reference: self::$constantName in class ${phpClass.name}")
+            }
+        }
+
+        log.info("Finished processing integer literals in class: ${phpClass.name}")
     }
 
     private fun generateConstantName(value: String): String {
@@ -128,7 +196,24 @@ class MagicVariableVisitor(private val project: Project) : PsiElementVisitor() {
         }.joinToString("")
     }
 
-    private fun isPartOfConstantOrVariable(literal: StringLiteralExpression): Boolean {
+    private fun generateConstantNameForInteger(contextName: String?, value: Int): String {
+        if (contextName == null) return "CONSTANT_$value"
+        return contextName.uppercase() + "_" + value
+    }
+
+    private fun getContextName(element: PsiElement): String? {
+        var contextElement = element.parent
+        while (contextElement != null && contextElement !is PhpClass) {
+            contextElement = contextElement.parent
+        }
+
+        if (contextElement is PhpClass) {
+            return contextElement.name
+        }
+        return null
+    }
+
+    private fun isPartOfConstantOrVariable(literal: PsiElement): Boolean {
         val parent = literal.parent
         return parent is Field || parent is Constant
     }
