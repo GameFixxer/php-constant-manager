@@ -47,7 +47,7 @@ class MagicVariableVisitor(private val project: Project) : PsiElementVisitor() {
     }
 
     private fun isTestClass(phpClass: PhpClass): Boolean {
-        val result = phpClass.nam.endsWith("Test") ?: false
+        val result = phpClass.name.endsWith("Test") ?: false
         log.info("Class ${phpClass.name} isTestClass: $result")
         return result
     }
