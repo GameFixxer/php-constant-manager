@@ -9,6 +9,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.jetbrains.php.lang.psi.PhpFile
+import com.github.gamefixxer.phpstormconstantmanagerplugin.visitor.PhpFileVisitor
 import org.mockito.Mockito.*
 
 class ReplaceMagicVariablesActionTest : BasePlatformTestCase() {
@@ -87,11 +88,12 @@ class ReplaceMagicVariablesActionTest : BasePlatformTestCase() {
         `when`(PsiManager.getInstance(project)).thenReturn(psiManager)
         `when`(psiManager.findFile(virtualFile)).thenReturn(psiFile)
 
-        doNothing().`when`(psiFile).accept(any(MagicVariableVisitor::class.java))
+        doNothing().`when`(psiFile).accept(any(PhpFileVisitor::class.java))
 
         action.actionPerformed(event)
 
         verify(psiManager, times(1)).findFile(virtualFile)
-        verify(psiFile, times(1)).accept(any(MagicVariableVisitor::class.java))
+        verify(psiFile, times(1)).accept(any(PhpFileVisitor::class.java))
+        // Add verification for logger.info if needed
     }
 }

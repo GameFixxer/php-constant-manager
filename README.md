@@ -24,7 +24,7 @@ This is a plugin for removing magic variables from your code and replacing it wi
 
 - Using the IDE built-in plugin system:
   
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "phpstorm-constant-manager-plugin"</kbd> >
+  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "php-constant-manager"</kbd> >
   <kbd>Install</kbd>
   
 - Manually:
