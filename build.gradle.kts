@@ -27,7 +27,12 @@ repositories {
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
-//    implementation(libs.exampleLibrary)
+    testImplementation("org.mockito:mockito-core:4.3.1")
+    testImplementation("org.mockito:mockito-inline:4.3.1")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.5.31")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.5.31")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 }
 
 // Set the JVM language level used to build the project.
@@ -122,4 +127,7 @@ tasks {
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
         channels = properties("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
     }
+}
+tasks.test {
+    useJUnitPlatform()
 }
