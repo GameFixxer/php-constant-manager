@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.jetbrains.php.lang.psi.PhpFile
 import com.intellij.openapi.diagnostic.thisLogger
+import com.github.gamefixxer.phpstormconstantmanagerplugin.visitor.PhpFileVisitor
 
 class ReplaceMagicVariablesAction : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
@@ -41,10 +42,10 @@ class ReplaceMagicVariablesAction : AnAction() {
         logger.info("Processing PhpFile: ${psiFile.name}")
 
         if (document != null) {
-            val visitor = MagicVariableVisitor(project)
+            val visitor = PhpFileVisitor(project)
             WriteCommandAction.runWriteCommandAction(project) {
                 psiFile.accept(visitor)
-                logger.info("MagicVariableVisitor applied to ${psiFile.name}")
+                logger.info("PhpFileVisitor applied to ${psiFile.name}")
             }
         }
     }

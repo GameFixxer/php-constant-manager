@@ -1,0 +1,41 @@
+<html>
+<body>
+Reports the usage of magic variables in PHP files, which can lead to code that is difficult to maintain and understand.
+
+<p>
+    The inspection helps detect occurrences of magic variables in your PHP codebase, promoting better coding practices by encouraging the use of explicit and well-defined variables instead.
+</p>
+<p>
+    It achieves this by analyzing PHP files and identifying any instances where magic variables are utilized. The inspection highlights these occurrences and suggests replacing them with explicitly defined variables. This can help improve code readability and maintainability, reducing the likelihood of bugs and enhancing overall code quality.
+</p>
+<p>
+    Embed code snippets:
+</p>
+<pre><code>
+// automatically highlighted according to inspection registration 'language' attribute
+package com.github.gamefixxer.phpstormconstantmanagerplugin
+
+import com.intellij.codeInspection.LocalInspectionTool
+import com.intellij.codeInspection.ProblemsHolder
+import com.intellij.psi.PsiElementVisitor
+import com.jetbrains.php.lang.psi.PhpFile
+
+class MagicVariableInspection : LocalInspectionTool() {
+    override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
+        return object : PsiElementVisitor() {
+            override fun visitElement(element: com.intellij.psi.PsiElement) {
+                if (element is PhpFile) {
+                    element.accept(MagicVariableVisitor(holder.project))
+                }
+            }
+        }
+    }
+}
+</code></pre>
+<!-- tooltip end -->
+<p>Text after this comment will only be shown in the settings of the inspection.</p>
+
+<p>To open related settings directly from the description, add a link with `settings://$` optionally followed by `?$` to
+    pre-select a UI element.</p>
+</body>
+</html>
