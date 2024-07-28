@@ -19,7 +19,19 @@ class IntegerLiteralProcessor(private val project: Project, private val log: Log
         integerLiterals.forEach { literal ->
             val value = literal.text.toInt()
             val contextName = ContextUtils.getContextName(literal)
-            val constantName = ConstantNameGenerator.generateForInteger(contextName, value)
+            val contextType = determineContextType(literal)
+            val arrayKeyName = ContextUtils.getArrayKeyName(literal)
+            val arrayValueName = ContextUtils.getArrayValueName(literal)
+            val paramName = ContextUtils.getParamName(literal)
+            log.info("Logging constant type: $contextType")
+            val constantName = ConstantNameGenerator.generateForInteger(
+                contextName,
+                value,
+                contextType,
+                arrayKeyName,
+                arrayValueName,
+                paramName
+            )
             constantNames.add(constantName)
             replacements[literal] = constantName
             log.info("Found integer literal: $value, generated constant name: $constantName")
@@ -61,5 +73,14 @@ class IntegerLiteralProcessor(private val project: Project, private val log: Log
         }
 
         log.info("Finished processing integer literals in class: ${phpClass.name}")
+    }
+
+    private fun determineContextType(literal: PsiElement): ConstantNameGenerator.ContextType {
+        return when {
+            ContextUtils.isArrayKey(literal) -> ConstantNameGenerator.ContextType.ARRAY_KEY
+            ContextUtils.isArrayValue(literal) -> ConstantNameGenerator.ContextType.ARRAY_VALUE
+            ContextUtils.isMethodParameter(literal) -> ConstantNameGenerator.ContextType.METHOD_PARAMETER
+            else -> ConstantNameGenerator.ContextType.DEFAULT
+        }
     }
 }
