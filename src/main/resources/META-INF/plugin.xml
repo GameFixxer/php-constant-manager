@@ -1,7 +1,11 @@
 <idea-plugin>
     <id>com.github.gamefixxer.php-constant-manager</id>
     <name>Php-Constant-Manager</name>
-    <description>Enables you to replace all magic values in your code with constants.</description>
+    <description>
+        <![CDATA[
+        Enables you to replace all magic values in your code with constants.
+        ]]>
+    </description>
     <vendor>gamefixxer</vendor>
 
     <depends>com.jetbrains.php</depends>
