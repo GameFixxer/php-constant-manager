@@ -81,8 +81,11 @@ tasks {
         pluginDescription = providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
             val start = "<!-- Plugin description -->"
             val end = "<!-- Plugin description end -->"
-            val predefinedDescription = "Enables you to replace all magic values in your code with constants."
-
+            val predefinedDescription = """
+<![CDATA[
+Enables you to replace all magic values in your code with constants.
+]]>
+"""
             with(it.lines()) {
                 if (!containsAll(listOf(start, end))) {
                     return@map markdownToHTML(predefinedDescription)
