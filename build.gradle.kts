@@ -82,9 +82,11 @@ tasks {
             val start = "<!-- Plugin description -->"
             val end = "<!-- Plugin description end -->"
             val predefinedDescription = """
-<![CDATA[
+                    <description>
+        <![CDATA[
 Enables you to replace all magic values in your code with constants.
 ]]>
+    </description>
 """
             with(it.lines()) {
                 if (!containsAll(listOf(start, end))) {
