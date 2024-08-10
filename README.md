@@ -17,7 +17,24 @@
 - [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
 
 <!-- Plugin description -->
-    <description>Enables you to replace all magic values in your code with constants.</description>
+    <description>Replace Magic Variables - For PHP
+Effortlessly replace hard-coded values with constants in your PHP codebase. The Replace Magic Variables plugin automates the process of identifying and refactoring "magic variables" (hard-coded string and integer literals) within PHP classes. It traverses your code, extracts these literals, and generates appropriate constants, enhancing code maintainability and reducing potential errors.
+
+Key Features:
+
+Automated Refactoring: Automatically detect and replace hard-coded string and integer literals in your PHP classes with well-named constants.
+Intelligent Naming: Generates meaningful constant names based on the literal's context, ensuring that your code remains clean and understandable.
+Selective Processing: Skips test classes and already defined constants, focusing only on parts of your code that need refactoring.
+Easy Integration: Integrates seamlessly into PhpStorm's workflow, triggered through a simple action within the IDE.
+Usage Instructions:
+
+Install the "Replace Magic Variables" plugin through the JetBrains Plugin Marketplace.
+Open any PHP file within PhpStorm and navigate to a class with hard-coded literals.
+Trigger the action by right-clicking within the editor or through the "Replace Magic Variables" action in the command palette.
+The plugin will analyze the file, generate constants, and replace the literals, providing log information about the changes made.
+This plugin is ideal for developers looking to enhance code quality by reducing the reliance on hard-coded values and ensuring that constants are used consistently throughout the codebase.
+
+This description should fit well within the card preview requirements, highlighting the main functionality upfront and providing clear usage instructions.</description>
 <!-- Plugin description end -->
 
 ## Installation
