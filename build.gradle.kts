@@ -32,7 +32,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test:2.0.20")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:2.0.20")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.3")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.1")
 }
 
 // Set the JVM language level used to build the project.
