@@ -24,7 +24,7 @@ class IntegerLiteralProcessor(private val project: Project, private val log: Log
             val arrayValueName = ContextUtils.getArrayValueName(literal)
             val paramName = ContextUtils.getParamName(literal)
             log.info("Logging constant type: $contextType")
-            val constantName = ConstantNameGenerator.generateForInteger(
+            val constantName = ConstantNameGenerator.generateConstantNameForInteger(
                 contextName,
                 value,
                 contextType,
