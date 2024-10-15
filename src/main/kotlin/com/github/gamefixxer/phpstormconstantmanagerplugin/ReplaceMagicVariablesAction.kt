@@ -41,12 +41,10 @@ class ReplaceMagicVariablesAction : AnAction() {
 
         logger.info("Processing PhpFile: ${psiFile.name}")
 
-        if (document != null) {
-            val visitor = PhpFileVisitor(project)
-            WriteCommandAction.runWriteCommandAction(project) {
-                psiFile.accept(visitor)
-                logger.info("PhpFileVisitor applied to ${psiFile.name}")
-            }
+        val visitor = PhpFileVisitor(project)
+        WriteCommandAction.runWriteCommandAction(project) {
+            psiFile.accept(visitor)
+            logger.info("PhpFileVisitor applied to ${psiFile.name}")
         }
     }
 }

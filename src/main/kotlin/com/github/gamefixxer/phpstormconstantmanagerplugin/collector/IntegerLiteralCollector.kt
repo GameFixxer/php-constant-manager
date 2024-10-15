@@ -8,8 +8,7 @@ import com.jetbrains.php.lang.psi.elements.PhpPsiElement
 
 class IntegerLiteralCollector {
 
-    fun collectLiterals(phpClass: PhpClass): List<PsiElement> {
-        return PsiTreeUtil.collectElements(phpClass) { it is PhpPsiElement && it.text.matches("^\\d+$".toRegex()) }
+    fun collectLiterals(phpClass: PhpClass): List<PsiElement> =
+        PsiTreeUtil.collectElements(phpClass) { it is PhpPsiElement && it.text.matches("^\\d+$".toRegex()) }
             .filter { literal -> !LiteralUtils.isPartOfConstantOrVariable(literal) }
-    }
 }

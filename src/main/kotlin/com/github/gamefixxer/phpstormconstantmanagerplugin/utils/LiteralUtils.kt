@@ -5,9 +5,5 @@ import com.jetbrains.php.lang.psi.elements.Constant
 import com.jetbrains.php.lang.psi.elements.Field
 
 object LiteralUtils {
-
-    fun isPartOfConstantOrVariable(literal: PsiElement): Boolean {
-        val parent = literal.parent
-        return parent is Field || parent is Constant
-    }
+    fun isPartOfConstantOrVariable(literal: PsiElement): Boolean = literal.parent is Field || literal.parent is Constant
 }

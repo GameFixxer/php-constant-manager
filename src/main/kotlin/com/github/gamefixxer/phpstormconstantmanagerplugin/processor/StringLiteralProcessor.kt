@@ -18,7 +18,7 @@ class StringLiteralProcessor(private val project: Project, private val log: Logg
 
         stringLiterals.forEach { literal ->
             val value = literal.contents
-            val constantName = ConstantNameGenerator.generate(value)
+            val constantName = ConstantNameGenerator.generateConstantNameForStringValues(value)
             constantNames.add(constantName)
             replacements[literal] = constantName
             log.info("Found string literal: \"$value\", generated constant name: $constantName")
