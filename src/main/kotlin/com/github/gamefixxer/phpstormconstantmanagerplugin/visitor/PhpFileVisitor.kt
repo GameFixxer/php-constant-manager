@@ -11,13 +11,9 @@ class PhpFileVisitor(private val project: Project) : PsiElementVisitor() {
 
     private val log = Logger.getInstance(PhpFileVisitor::class.java)
 
-    override fun visitElement(element: PsiElement) {
-        if (element is PhpFile) {
-            log.info("Visiting PHP file: ${element.name}")
-            PhpClassProcessor(project, log).visitPhpFile(element)
-        } else {
-            log.info("Skipping non-PHP file element: ${element.javaClass.simpleName}")
-        }
-        super.visitElement(element)
-    }
+    override fun visitElement(element: PsiElement): Unit =
+        (element as? PhpFile)?.let {
+            log.info("Visiting PHP file: ${it.name}")
+            PhpClassProcessor(project, log).visitPhpFile(it)
+        } ?: super.visitElement(element)
 }

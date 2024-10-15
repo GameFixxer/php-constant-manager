@@ -4,6 +4,10 @@ import com.intellij.openapi.diagnostic.thisLogger
 
 object ConstantNameGenerator {
 
+    enum class ContextType {
+        DEFAULT, ARRAY_KEY, ARRAY_VALUE, METHOD_PARAMETER
+    }
+
     private val validChars = Regex("[A-Za-z0-9_]")
 
     private val replacementTable = mapOf(
@@ -15,7 +19,7 @@ object ConstantNameGenerator {
 
     fun generateConstantNameForStringValues(value: String, contextName: String? = null, paramName: String? = null): String {
         val logger = thisLogger()
-        logger.warn("Values:" + value + "-" + contextName + "-" + paramName + "-")
+        logger.warn("Values:$value-$contextName-$paramName-")
         val formattedValue = value.map { char ->
             if (char.toString().matches(validChars)) {
                 char.uppercaseChar()
@@ -46,28 +50,18 @@ object ConstantNameGenerator {
             else -> "${contextName?.uppercase() ?: "CONSTANT"}_$value"
         }
     }
-
-    // Improved contextual name generator for method parameters
-    fun generateForMethodParameter(value: Any, paramName: String): String {
-        val valueStr = when (value) {
+    /*
+    fun generateForMethodParameter(value: Any, paramName: String): String =
+        "${paramName.uppercase()} ${when (value) {
             is String -> generateConstantNameForStringValues(value)
             is Int -> value.toString()
             else -> "UNKNOWN"
-        }
-        return "${paramName.uppercase()}_$valueStr"
-    }
+        }}"
 
-    // Generates a name for literals based on their usage context
-    fun generateBasedOnContext(value: Any, contextName: String?, paramName: String? = null): String {
-        return when (value) {
+    fun generateBasedOnContext(value: Any, contextName: String?, paramName: String? = null): String = when (value) {
             is String -> generateConstantNameForStringValues(value, contextName, paramName)
             is Int -> generateConstantNameForInteger(contextName, value, ContextType.DEFAULT, paramName = paramName)
             else -> contextName?.uppercase() ?: "LITERAL"
         }
-    }
-
-    // Context type enum to manage naming strategies
-    enum class ContextType {
-        DEFAULT, ARRAY_KEY, ARRAY_VALUE, METHOD_PARAMETER
-    }
+*/
 }
