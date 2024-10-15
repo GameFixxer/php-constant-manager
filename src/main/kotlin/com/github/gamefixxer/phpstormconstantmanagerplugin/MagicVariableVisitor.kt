@@ -46,11 +46,7 @@ class MagicVariableVisitor(private val project: Project) : PsiElementVisitor() {
         })
     }
 
-    private fun isTestClass(phpClass: PhpClass): Boolean {
-        val result = phpClass.name.endsWith("Test") ?: false
-        log.info("Class ${phpClass.name} isTestClass: $result")
-        return result
-    }
+    private fun isTestClass(phpClass: PhpClass): Boolean = phpClass.name.endsWith("Test") ?: false
 
     private fun processClass(phpClass: PhpClass) {
         log.info("Processing class: ${phpClass.name}")
@@ -75,12 +71,9 @@ class MagicVariableVisitor(private val project: Project) : PsiElementVisitor() {
         }
     }
 
-    private fun collectIntegerLiterals(phpClass: PhpClass): List<PsiElement> {
-        return PsiTreeUtil.collectElements(phpClass) { it is PhpPsiElement && it.text.matches("^\\d+$".toRegex()) }
-            .filter { literal ->
-                !isPartOfConstantOrVariable(literal)
-            }
-    }
+    private fun collectIntegerLiterals(phpClass: PhpClass): List<PsiElement>  = PsiTreeUtil.collectElements(phpClass) {
+        it is PhpPsiElement && it.text.matches("^\\d+$".toRegex())
+    }.filter { literal -> !isPartOfConstantOrVariable(literal) }
 
     private fun processStringLiterals(phpClass: PhpClass, stringLiterals: List<StringLiteralExpression>) {
         val constantNames = mutableSetOf<String>()
