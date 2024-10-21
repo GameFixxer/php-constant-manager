@@ -32,7 +32,7 @@ class StringLiteralProcessor(private val project: Project, private val log: Logg
             val anchor = lBrace?.nextSibling
 
             constantNames.forEach { constantName ->
-                val constantValue = replacements.entries.find { it.value == constantName }?.key?.text?.replace("\"", "\\\"") ?: ""
+                val constantValue = replacements.entries.find { it.value == constantName }?.key?.text ?: ""
                 val constantDeclaration = PhpPsiElementFactory.createClassConstant(
                     project,
                     PhpModifier.instance(
@@ -48,7 +48,7 @@ class StringLiteralProcessor(private val project: Project, private val log: Logg
                 } else {
                     phpClass.add(constantDeclaration)
                 }
-                log.info("Added constant declaration: private const $constantName = \"$constantValue\"; to class ${phpClass.name}")
+                log.info("Added constant declaration: private const $constantName = $constantValue; to class ${phpClass.name}")
             }
 
             // Replace magic variables with constants

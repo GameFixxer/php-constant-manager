@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.ui.Messages
 
+/*
 class ReplaceMagicVariablesAdvancedAction : AnAction() {
     override fun actionPerformed(e: AnActionEvent) {
         // Display a simple popup with placeholder options for advanced settings
@@ -25,4 +26,14 @@ class ReplaceMagicVariablesAdvancedAction : AnAction() {
             // TODO: Implement logic for applying the prefix to generated constants
         }
     }
+}*/
+
+class ReplaceMagicVariablesAdvancedAction : AnAction() {
+    override fun actionPerformed(e: AnActionEvent) {
+        val dialog = ReplaceMagicVariablesAdvancedDialog()
+        if (dialog.showAndGet()) {
+            // The user clicked OK
+        }
+    }
 }
+
