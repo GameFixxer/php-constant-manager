@@ -53,4 +53,3 @@ By participating in this project, you agree to abide by our [Code of Conduct](CO
 ## Thank You!
 
 Thank you for your contributions! Your efforts help improve the project for everyone.
-CONTRIBUTING.md
